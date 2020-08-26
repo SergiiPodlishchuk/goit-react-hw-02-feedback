@@ -1,17 +1,21 @@
 import React from "react";
 
-export default function FeedbackOptions({ options, onLeaveFeedback }) {
+import Section from "../Section/Section";
+
+export default function FeedbackOptions({ onLeaveFeedback }) {
   return (
-    <div>
-      <button type="button" id="good" onClick={onLeaveFeedback}>
-        Good
-      </button>
-      <button type="button" id="neutral" onClick={onLeaveFeedback}>
-        Neutral
-      </button>
-      <button type="button" id="bad" onClick={onLeaveFeedback}>
-        Bad
-      </button>
-    </div>
+    <Section title="Please leave feedback">
+      <div>
+        <button type="button" id="good" onClick={onLeaveFeedback}>
+          Good
+        </button>
+        <button type="button" id="neutral" onClick={onLeaveFeedback}>
+          Neutral
+        </button>
+        <button type="button" id="bad" onClick={onLeaveFeedback}>
+          Bad
+        </button>
+      </div>
+    </Section>
   );
 }

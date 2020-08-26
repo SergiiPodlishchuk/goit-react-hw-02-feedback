@@ -1,42 +1,33 @@
 import React, { Component } from "react";
+
 import Statistics from "./components/Statistics/Statistics";
 import FeedbackOptions from "./components/FeedbackOptions/FeedbackOptions";
-import Section from "./components/Section/Section";
-import Notification from "./components/Notification/Notification";
+
+const INITIAL_FEEDBACK = { good: 0, neutral: 0, bad: 0 };
 
 export default class App extends Component {
-  static defaultProps = { good: 0, neutral: 0, bad: 0 };
+  state = INITIAL_FEEDBACK;
 
-  static propTypes = {};
-
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
-
-  addReview = (e) => {
-    if (e.target.id === "good") {
+  addReview = ({ target }) => {
+    const { id } = target;
+    if (id === "good") {
       this.setState((prevState) => {
         return { good: prevState.good + 1 };
       });
-    } else if (e.target.id === "neutral") {
+      return;
+    }
+    if (id === "neutral") {
       this.setState((prevState) => {
         return { neutral: prevState.neutral + 1 };
       });
-    } else if (e.target.id === "bad") {
+      return;
+    }
+    if (id === "bad") {
       this.setState((prevState) => {
         return { bad: prevState.bad + 1 };
       });
+      return;
     }
-  };
-
-  countTotalFeedback = () => {
-    const total = Object.values(this.state).reduce(
-      (acc, value) => acc + value,
-      0
-    );
-    return <p>Total: {total}</p>;
   };
 
   countPositiveFeedbackPercentage = () => {
@@ -48,38 +39,27 @@ export default class App extends Component {
       total += element;
       persentage = (this.state.good / (total - this.state.neutral)) * 100;
     }
-    // const persentage = Object.values(this.state).reduce(
-    //   (acc, value) => this.state.good / (acc + value - this.state.neutral)*100,
-    //   0
-    // );
-
-    return <p>Positive feedback: {persentage}%</p>;
+    return persentage;
   };
 
   render() {
+    const { good, neutral, bad } = this.state;
     const total = Object.values(this.state).reduce(
       (acc, value) => acc + value,
       0
     );
+    const persentage = this.countPositiveFeedbackPercentage();
 
     return (
       <div>
-        <Section title="Please leave feedback">
-          <FeedbackOptions onLeaveFeedback={this.addReview} />
-        </Section>
-
-        <Section title="Statistics">
-          {total === 0 && <Notification message="No feedback given" />}
-          {total > 0 && (
-            <Statistics
-              good={this.state.good}
-              neutral={this.state.neutral}
-              bad={this.state.bad}
-              total={<this.countTotalFeedback />}
-              positivePercentage={<this.countPositiveFeedbackPercentage />}
-            />
-          )}
-        </Section>
+        <FeedbackOptions onLeaveFeedback={this.addReview} />
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={total}
+          positivePercentage={persentage}
+        />
       </div>
     );
   }
